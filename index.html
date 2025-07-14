@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sabidin Playground 🏪💸</title>
+    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-animation-component@3.2.1/dist/aframe-animation-component.min.js"></script>
+    <!-- <script src="https://npmcdn.com/aframe-animation-component@3.0.1"></script> -->
+    <script src="https://npmcdn.com/aframe-event-set-component@3.0.1"></script>
+    <script src="https://unpkg.com/aframe-layout-component@5.3.0/dist/aframe-layout-component.min.js"></script>
+    <script src="https://npmcdn.com/aframe-template-component@3.1.1"></script>
+    <link rel="icon" type="image/svg"
+        href="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/icone.svg?v=1718057931501">
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <img id="textura-fundo"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/fundo-branco.png?v=1718057953380">
+            <img id="textura-aceitar"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/botao-aceitar.png?v=1718057953661">
+            <img id="textura-negar"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/botao-negar.png?v=1718057954302">
+            <img id="textura-zerar"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/botao-zerar.png?v=1718057952933"
+                alt="">
+            <img id="textura-entregar"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/botao-entregar.png?v=1718057954010"
+                alt="">
+            <img id="textura-reiniciar"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/botao-reiniciar.png?v=1718057952645"
+                alt="">
+
+            <img id="mural-explicativo"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/mural-explicativo.png?v=1718057932262"
+                alt="">
+
+            <img id="fundo-cidade"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cidade.jpg?v=1718057977250" alt="">
+
+            <img id="betinho-feliz"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/betinho-feliz.png?v=1718057993273"
+                alt="">
+            <img id="betinho-triste"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/betinho-triste.png?v=1718057992761"
+                alt="">
+
+            <img id="cedula-1-textura"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-1.jpg?v=1718057987025">
+            <img id="cedula-2-textura"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-2.jpg?v=1718057984294">
+            <img id="cedula-5-textura"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-5.jpg?v=1718057984721">
+            <img id="cedula-10-textura"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-10.jpg?v=1718057985212">
+            <img id="cedula-20-textura"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-20.jpg?v=1718057985642">
+            <img id="cedula-50-textura"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-50.jpg?v=1718057986055">
+            <img id="cedula-100-textura"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-100.jpg?v=1718057986532">
+
+            <audio id="click-sound" crossorigin="anonymous"
+                src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"></audio>
+            <audio id="background-music"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/background-song.ogg?v=1718058001900"></audio>
+            <audio id="correct-sound"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/certo.ogg?v=1718058002234"></audio>
+            <audio id="incorrect-sound"
+                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/errado.ogg?v=1718058002528"></audio>
+        </a-assets>
+
+        <a-entity sound="src: #background-music; autoplay: true; loop: true; volume: 0.4"></a-entity>
+
+        <a-entity id="playground" position="-3 -0.6 -4">
+            <a-entity position="0 0 -0.5" rotation="0 0 0" gltf-model="assets/shopping_store.glb"
+                scale="1.5 1.5 1.5"></a-entity>
+
+            <a-entity position="6.2 1.5 -0.1" id="troco-mensagem" rotation="0 -90 0"
+                animation="property: position; to: 6.2 1.3 -0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate">
+                <a-plane position="6.9 1.5 2.7" rotation="0 -90 0" width="0.7" height="0.7"
+                    material="src: #betinho-triste; transparent: true;" id="betinho-troco"></a-plane>
+                <a-plane position="7 1.5 3.5" rotation="0 -90 0" width="3" height="1"
+                    material="src: #textura-fundo; transparent: true;"></a-plane>
+                <a-text value="Mandou mal!" position="7 1.55 4" rotation="0 -90 0" width="1.5" align="center"
+                    color="black" font="Sora-Medium-msdf.json"
+                    font-image="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/Sora-Medium.png?v=1718057965467"
+                    negate="false" wrap-count="25" id="troco-betinho-texto"></a-text>
+            </a-entity>
+
+            <a-entity position="6.5 0.5 -0.6" rotation="0 -90 0" id="painel-troco">
+                <a-text value="TROCO: 0R$" position="7 1.55 3.9" rotation="0 -90 0" width="1.5" align="center"
+                    color="white" font="Sora-Medium-msdf.json"
+                    font-image="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/Sora-Medium.png?v=1718057965467"
+                    negate="false" wrap-count="25" id="troco"></a-text>
+                <a-plane position="6.9 1.2 4.3" rotation="0 -90 0" width="0.85" height="0.3"
+                    material="src: #textura-zerar; transparent: true;" class="interagivel" id="zerar"
+                    event-set__mouseenter="_event: mouseenter; scale: 1.05 1.05 1.05"
+                    event-set__mouseleave="_event: mouseleave; scale: 1 1 1"
+                    sound="on: click; src: #click-sound"></a-plane>
+                <a-plane position="6.9 1.2 3.5" rotation="0 -90 0" width="0.85" height="0.3"
+                    material="src: #textura-entregar; transparent: true;" class="interagivel" id="entregar"
+                    event-set__mouseenter="_event: mouseenter; scale: 1.05 1.05 1.05"
+                    event-set__mouseleave="_event: mouseleave; scale: 1 1 1"
+                    sound="on: click; src: #click-sound"></a-plane>
+
+                <a-entity layout="type: line; margin: 0.3;" position="6.3 1 3.2" rotation="0 -90 0">
+                    <a-plane rotation="-90 -90 0" width="0.5" height="0.25" material="src: #cedula-1-textura;"
+                        id="cedula-1" event-set__mouseenter="_event: mouseenter; scale: 1.1 1.1 1.1"
+                        event-set__mouseleave="_event: mouseleave; scale: 1 1 1"
+                        sound="on: click; src: #click-sound"></a-plane>
+                    <a-plane rotation="-90 -90 0" width="0.5" height="0.25" material="src: #cedula-2-textura;"
+                        id="cedula-2" event-set__mouseenter="_event: mouseenter; scale: 1.1 1.1 1.1"
+                        event-set__mouseleave="_event: mouseleave; scale: 1 1 1"
+                        sound="on: click; src: #click-sound"></a-plane>
+                    <a-plane rotation="-90 -90 0" width="0.5" height="0.25" material="src: #cedula-5-textura;"
+                        id="cedula-5" event-set__mouseenter="_event: mouseenter; scale: 1.1 1.1 1.1"
+                        event-set__mouseleave="_event: mouseleave; scale: 1 1 1"
+                        sound="on: click; src: #click-sound"></a-plane>
+                    <a-plane rotation="-90 -90 0" width="0.5" height="0.25" material="src: #cedula-10-textura;"
+                        id="cedula-10" event-set__mouseenter="_event: mouseenter; scale: 1.1 1.1 1.1"
+                        event-set__mouseleave="_event: mouseleave; scale: 1 1 1"
+                        sound="on: click; src: #click-sound"></a-plane>
+                    <a-plane rotation="-90 -90 0" width="0.5" height="0.25" material="src: #cedula-20-textura;"
+                        id="cedula-20" event-set__mouseenter="_event: mouseenter; scale: 1.1 1.1 1.1"
+                        event-set__mouseleave="_event: mouseleave; scale: 1 1 1"
+                        sound="on: click; src: #click-sound"></a-plane>
+                    <a-plane rotation="-90 -90 0" width="0.5" height="0.25" material="src: #cedula-50-textura;"
+                        id="cedula-50" event-set__mouseenter="_event: mouseenter; scale: 1.1 1.1 1.1"
+                        event-set__mouseleave="_event: mouseleave; scale: 1 1 1"
+                        sound="on: click; src: #click-sound"></a-plane>
+                    <a-plane rotation="-90 -90 0" width="0.5" height="0.25" material="src: #cedula-100-textura;"
+                        id="cedula-100" event-set__mouseenter="_event: mouseenter; scale: 1.1 1.1 1.1"
+                        event-set__mouseleave="_event: mouseleave; scale: 1 1 1"
+                        sound="on: click; src: #click-sound"></a-plane>
+                </a-entity>
+            </a-entity>
+
+            <a-plane position="12 1.5 12" rotation="0 -90 0" width="3" height="4"
+                material="src: #textura-cliente; transparent: true" id="cliente"
+                animation="property: position; to: 12 1.5 -12; dur: 5000; easing: linear; loop: true; enabled: true;">
+            </a-plane>
+
+            <a-entity position="0 2 0" id="mensagem-betinho" visible="false"
+                animation="property: position; to: 0 1.7 0; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate">
+                <a-plane position="6.9 1.5 2.7" rotation="0 -90 0" width="0.7" height="0.7"
+                    material="src: #betinho-triste; transparent: true;" id="imagem-betinho"></a-plane>
+                <a-plane position="7 1.5 3.5" rotation="0 -90 0" width="3" height="1"
+                    material="src: #textura-fundo; transparent: true;"></a-plane>
+                <a-text value="" position="7 1.55 4" rotation="0 -90 0" width="1.5" align="center" color="black"
+                    font="Sora-Medium-msdf.json"
+                    font-image="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/Sora-Medium.png?v=1718057965467"
+                    negate="false" wrap-count="25" id="texto-betinho"></a-text>
+            </a-entity>
+
+            <a-plane position="3 1.5 1.5" rotation="0 0 0" width="2.5" height="2.5"
+                material="src: #mural-explicativo; transparent: true;"
+                animation="property: position; to: 3 1.55 1.5; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"></a-plane>
+
+            <a-plane position="25 4.5 -5" rotation="0 -90 0" width="50" height="16" material="src: #fundo-cidade;"
+                animation="property: scale; to: 1.05 1.05 1.05; dur: 3000; easing: easeInOutQuad; loop: true; dir: alternate"></a-plane>
+
+            <a-entity id="interacao" position="-1.8 0 0">
+                <a-plane position="7 1.5 3.5" rotation="0 -90 0" width="3" height="1"
+                    material="src: #textura-fundo; transparent: true; opacity: 0.8"></a-plane>
+                <a-plane position="6.9 1.2 4.1" rotation="0 -90 0" width="0.85" height="0.3"
+                    material="src: #textura-aceitar; transparent: true;" class="interagivel" id="aceitar"
+                    event-set__mouseenter="_event: mouseenter; scale: 1.2 1.2 1.2"
+                    event-set__mouseleave="_event: mouseleave; scale: 1 1 1"
+                    sound="on: click; src: #click-sound"></a-plane>
+                <a-plane position="6.9 1.2 3" rotation="0 -90 0" width="0.85" height="0.3"
+                    material="src: #textura-negar; transparent: true;" class="interagivel" id="negar"
+                    event-set__mouseenter="_event: mouseenter; scale: 1.2 1.2 1.2"
+                    event-set__mouseleave="_event: mouseleave; scale: 1 1 1" reset-animation
+                    sound="on: click; src: #click-sound"></a-plane>
+                <a-text
+                    value="Olá, meu nome é joãozinho, e eu queria comprar dois carrinhos de brinquedo pelo preço de 200 reais. Você aceita?"
+                    position="7 1.7 3.5" rotation="0 -90 0" width="2.5" align="center" color="black"
+                    font="Sora-Medium-msdf.json"
+                    font-image="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/Sora-Medium.png?v=1718057965467g"
+                    negate="false" id="texto-interacao"></a-text>
+            </a-entity>
+
+            <a-text value="SALDO DA LOJA: 0R$" position="-2 2.3 3.5" rotation="0 90 0" width="3.5" align="center"
+                color="white" font="Sora-Medium-msdf.json"
+                font-image="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/Sora-Medium.png?v=1718057965467"
+                negate="false" id="texto-saldo"></a-text>
+            <a-plane position="-2 1.5 3.5" rotation="0 90 0" width="2.5" height="1"
+                material="src: #textura-reiniciar; transparent: true;"
+                event-set__mouseenter="_event: mouseenter; scale: 1.2 1.2 1.2"
+                event-set__mouseleave="_event: mouseleave; scale: 1 1 1" class="interagivel" id="reiniciar"></a-plane>
+        </a-entity>
+
+        <!--         3 2.3 4 -->
+        <a-entity camera look-controls wasd-controls position="0 1.7 0" rotation="180 0 0">
+            <a-cursor fuse="true" raycaster="objects: .interagivel"
+                event-set__1="_event: mouseenter; color: springgreen"
+                event-set__2="_event: mouseleave; color: black"></a-cursor>
+        </a-entity>
+    </a-scene>
+
+    <script>
+        var mensagem = document.getElementById('interacao');
+        var texto = document.getElementById('texto-interacao');
+        var textures = [
+            'https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/pato.png?v=1718057945918',
+            'https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/pombo.png?v=1718057944566',
+            'https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/tubarao.png?v=1718057945333',
+        ];
+        var currentTextureIndex = 0;
+        var mensagemBetinho = document.getElementById('mensagem-betinho');
+        var textoBetinho = document.getElementById('texto-betinho');
+        var imagemBetinho = document.getElementById('imagem-betinho');
+        var painelTroco = document.getElementById('painel-troco');
+        var mensagemBetinhoTroco = document.getElementById('troco-mensagem');
+        var textoBetinhoTroco = document.getElementById('troco-betinho-texto');
+
+        var reiniciar = document.querySelector('#reiniciar');
+        var textoSaldo = document.getElementById('texto-saldo');
+        var saldoAtual = 0;
+
+        reiniciar.addEventListener('click', function () {
+            // location.reload();
+            saldoAtual = 0;
+            textoSaldo.setAttribute('value', 'SALDO DA LOJA: ' + saldoAtual + 'R$');
+        });
+
+
+        var trocoInserido = 0;
+        var troco = document.getElementById('troco');
+        var valorPedido; // Define valorPedido as a global variable
+
+        var valorPago = 0;
+
+        var nomes = ["Alex", "Cris", "Dani", "Julio", "Léo", "Nico", "Tay", "Bia", "Tuca", "Sami", "Rafa", "Cau", "Gui", "Tati", "Fran"];
+        var quantidades = [1, 2, 3, 4];
+        var produtos = ["carrinho(s) de brinquedo", "urso(s) de pelucia", "caixa(s) de blocos de construção"];
+        var precosVenda = {
+            "carrinho(s) de brinquedo": 20,
+            "urso(s) de pelucia": 35,
+            "caixa(s) de blocos de construção": 110
+        };
+        var precosCompra = {
+            "carrinho(s) de brinquedo": 15,
+            "urso(s) de pelucia": 30,
+            "caixa(s) de blocos de construção": 100
+        };
+
+        function getRandomElement(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function toggleInteragivel(classe, adicionar) {
+            var elementos = document.querySelectorAll(classe);
+            elementos.forEach(function (elemento) {
+                if (adicionar) {
+                    elemento.classList.add('interagivel');
+                } else {
+                    elemento.classList.remove('interagivel');
+                }
+            });
+        }
+
+        function gerarFrase() {
+            let nome = getRandomElement(nomes);
+            let quantidade = getRandomElement(quantidades);
+            let produto = getRandomElement(produtos);
+            let precoVendido = precosVenda[produto];
+            valorPedido = (quantidade * precoVendido) + (Math.floor(Math.random() * 31) - 25);
+            texto.setAttribute('data-quantidade', quantidade);
+            texto.setAttribute('data-produto', produto);
+            texto.setAttribute('data-valor-pedido', valorPedido);
+            return `Olá, meu nome é ${nome} gostaria de comprar ${quantidade} ${produto} pelo preço de ${valorPedido} reais. Tudo bem?`;
+        }
+
+        function verificarDecisao(aceitou) {
+            let quantidade = parseInt(texto.getAttribute('data-quantidade'));
+            let produto = texto.getAttribute('data-produto');
+            let valorPedido = parseInt(texto.getAttribute('data-valor-pedido'));
+            let precoCompra = precosCompra[produto];
+            let valorCompra = quantidade * precoCompra;
+            let lucro = valorPedido - valorCompra;
+
+            mensagemBetinho.setAttribute('visible', true);
+
+            if (valorCompra < valorPedido) {
+                if (aceitou) {
+                    textoBetinho.setAttribute('value', 'Boa decisão! você teve lucro de ' + lucro + ' reais.');
+                    imagemBetinho.setAttribute('src', '#betinho-feliz');
+                    document.querySelector('#correct-sound').play();
+                } else {
+                    textoBetinho.setAttribute('value', 'Má decisão. você teria lucro de ' + lucro + ' reais.');
+                    imagemBetinho.setAttribute('src', '#betinho-triste');
+                    document.querySelector('#incorrect-sound').play();
+                }
+            } else {
+                if (aceitou) {
+                    textoBetinho.setAttribute('value', 'Má decisão. você teve prejuizo de ' + -lucro + ' reais.');
+                    imagemBetinho.setAttribute('src', '#betinho-triste');
+                    document.querySelector('#incorrect-sound').play();
+                } else {
+                    textoBetinho.setAttribute('value', 'Boa decisão! você teria prejuizo de ' + -lucro + ' reais.');
+                    imagemBetinho.setAttribute('src', '#betinho-feliz');
+                    document.querySelector('#correct-sound').play();
+                }
+            }
+
+            setTimeout(function () {
+                mensagemBetinho.setAttribute('visible', false);
+            }, 4000);
+        }
+
+
+
+        function atualizarTroco(valor) {
+            trocoInserido += valor;
+            troco.setAttribute('value', 'TROCO: ' + trocoInserido + 'R$');
+        }
+
+        function mandarClienteEmbora() {
+            const cliente = document.querySelector('#cliente');
+            // recoloca o plano um pouquinho FORA da zona antes de dar play
+            cliente.object3D.position.z = 2.85;
+            const anim = cliente.components.animation;
+            if (anim) anim.play();
+        }
+
+
+        function zerarTroco() {
+            trocoInserido = 0;
+            troco.setAttribute('value', 'TROCO: ' + trocoInserido + 'R$');
+        }
+
+        AFRAME.registerComponent('check-position', {
+            init: function () {
+                this.alreadyStopped = false;          // controle interno
+            },
+
+            tick: function () {
+                let position = this.el.object3D.position;
+
+                const z = this.el.object3D.position.z;
+
+                /* —­­­­ 1) Chegou à frente da loja —­­­­ */
+                if (!this.alreadyStopped && z <= 3 && z >= 2.9) {
+                    const anim = this.el.components.animation;
+                    if (anim) anim.pause();
+                    this.alreadyStopped = true;         // trava novas pausas
+                    mensagem.setAttribute('visible', true);
+                }
+
+                /* —­­­­ 2) Já saiu da zona (cliente indo embora ou novo cliente chegando) —­­­­ */
+                if (this.alreadyStopped && (z > 3 || z < 2.8)) {
+                    this.alreadyStopped = false;        // libera nova pausa na próxima passagem
+                    mensagem.setAttribute('visible', false);
+                }
+
+                if (position.z === -12) {
+                    currentTextureIndex = (currentTextureIndex + 1) % textures.length;
+                    cliente.setAttribute('material', 'src', textures[currentTextureIndex]);
+
+                    //nova interacao (Aqui deve mudar o texto do a-text)
+                    aceitar.setAttribute('visible', true);
+                    negar.setAttribute('visible', true);
+                    let frase = gerarFrase();
+                    texto.setAttribute('value', frase);
+                }
+            }
+        });
+
+        AFRAME.registerComponent('reset-animation', {
+            init: function () {
+                var self = this;
+                this.el.addEventListener('click', function () {
+
+                });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let frase = gerarFrase();
+            texto.setAttribute('value', frase);
+
+            var cliente = document.querySelector('#cliente');
+            cliente.setAttribute('check-position', '');
+
+            mensagem.setAttribute("visible", false);
+            var aceitar = document.querySelector('#aceitar');
+            var negar = document.querySelector('#negar');
+            var entregar = document.querySelector('#entregar');
+            // entregar.setAttribute('reset-animation', '');
+            mensagemBetinhoTroco.setAttribute('visible', false);
+
+            cliente.setAttribute('material', 'src', textures[0]);
+
+            toggleInteragivel('#cedula-1, #cedula-2, #cedula-5, #cedula-10, #cedula-20, #cedula-50, #cedula-100, #entregar, #zerar', false);
+
+            aceitar.addEventListener('click', function () {
+                verificarDecisao(true);
+
+                valorPago = valorPedido + Math.floor(Math.random() * 30) + 1;
+                texto.setAttribute('value', `Comprei por ${valorPedido}R$, mas vou lhe pagar com ${valorPago}R$. Qual será meu troco?`);
+                aceitar.setAttribute('visible', false);
+                negar.setAttribute('visible', false);
+
+                toggleInteragivel('#cedula-1, #cedula-2, #cedula-5, #cedula-10, #cedula-20, #cedula-50, #cedula-100, #entregar, #zerar', true);
+            });
+
+            negar.addEventListener('click', function () {
+                verificarDecisao(false);
+
+                var cliente = document.querySelector('#cliente');
+                cliente.setAttribute('position', { x: cliente.getAttribute('position').x, y: cliente.getAttribute('position').y, z: 12 });
+                mensagem.setAttribute("visible", false);
+                mandarClienteEmbora();
+            });
+
+            document.querySelector('#cedula-1').addEventListener('click', function () {
+                atualizarTroco(1);
+            });
+            document.querySelector('#cedula-2').addEventListener('click', function () {
+                atualizarTroco(2);
+            });
+            document.querySelector('#cedula-5').addEventListener('click', function () {
+                atualizarTroco(5);
+            });
+            document.querySelector('#cedula-10').addEventListener('click', function () {
+                atualizarTroco(10);
+            });
+            document.querySelector('#cedula-20').addEventListener('click', function () {
+                atualizarTroco(20);
+            });
+            document.querySelector('#cedula-50').addEventListener('click', function () {
+                atualizarTroco(50);
+            });
+            document.querySelector('#cedula-100').addEventListener('click', function () {
+                atualizarTroco(100);
+            });
+            document.querySelector('#zerar').addEventListener('click', function () {
+                zerarTroco();
+            });
+            entregar.addEventListener('click', function () {
+                if (trocoInserido == (valorPago - valorPedido)) {
+                    document.getElementById('betinho-troco').setAttribute('src', '#betinho-feliz');
+                    textoBetinhoTroco.setAttribute('value', 'Que bom! Você acertou o troco desse ultimo cliente!');
+                    document.querySelector('#correct-sound').play();
+                } else {
+                    document.getElementById('betinho-troco').setAttribute('src', '#betinho-triste');
+                    textoBetinhoTroco.setAttribute('value', 'Que pena! Voce errou o troco desse ultimo cliente!');
+                    document.querySelector('#incorrect-sound').play();
+                }
+                mensagemBetinhoTroco.setAttribute('visible', true);
+
+                var cliente = document.querySelector('#cliente');
+                cliente.setAttribute('position', { x: cliente.getAttribute('position').x, y: cliente.getAttribute('position').y, z: 12 });
+                mensagem.setAttribute("visible", false);
+                mandarClienteEmbora();
+
+                saldoAtual += valorPago;
+                textoSaldo.setAttribute('value', 'SALDO DA LOJA: ' + saldoAtual + 'R$');
+
+                setInterval(function () {
+                    textoBetinhoTroco.setAttribute('value', 'Preste bastante atenção ao calcular o troco do seu cliente!');
+                    // mensagemBetinhoTroco.setAttribute('visible', false);
+                }, 6000);
+
+                toggleInteragivel('#cedula-1, #cedula-2, #cedula-5, #cedula-10, #cedula-20, #cedula-50, #cedula-100, #entregar, #zerar', false);
+
+                zerarTroco();
+            });
+        });
+    </script>
+</body>
+
+</html>
