@@ -18,50 +18,27 @@
 <body>
     <a-scene>
         <a-assets>
-            <img id="textura-fundo"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/fundo-branco.png?v=1718057953380">
-            <img id="textura-aceitar"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/botao-aceitar.png?v=1718057953661">
-            <img id="textura-negar"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/botao-negar.png?v=1718057954302">
-            <img id="textura-zerar"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/botao-zerar.png?v=1718057952933"
-                alt="">
-            <img id="textura-entregar"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/botao-entregar.png?v=1718057954010"
-                alt="">
-            <img id="textura-reiniciar"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/botao-reiniciar.png?v=1718057952645"
-                alt="">
+            <img id="textura-fundo" src="assets/ui/fundo-branco.png">
+            <img id="textura-aceitar" src="assets/ui/botao-aceitar.png">
+            <img id="textura-negar" src="assets/ui/botao-negar.png">
+            <img id="textura-zerar" src="assets/ui/botao-zerar.png" alt="">
+            <img id="textura-entregar" src="assets/ui/botao-entregar.png" alt="">
+            <img id="textura-reiniciar" src="assets/ui/botao-reiniciar.png" alt="">
 
-            <img id="mural-explicativo"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/mural-explicativo.png?v=1718057932262"
-                alt="">
+            <img id="mural-explicativo" src="assets/ui/mural-explicativo.png" alt="">
 
-            <img id="fundo-cidade"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cidade.jpg?v=1718057977250" alt="">
+            <img id="fundo-cidade" src="assets/ui/cidade.jpg" alt="">
 
-            <img id="betinho-feliz"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/betinho-feliz.png?v=1718057993273"
-                alt="">
-            <img id="betinho-triste"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/betinho-triste.png?v=1718057992761"
-                alt="">
+            <img id="betinho-feliz" src="assets/ui/betinho-feliz.png" alt="">
+            <img id="betinho-triste" src="assets/ui/betinho-triste.png" alt="">
 
-            <img id="cedula-1-textura"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-1.jpg?v=1718057987025">
-            <img id="cedula-2-textura"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-2.jpg?v=1718057984294">
-            <img id="cedula-5-textura"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-5.jpg?v=1718057984721">
-            <img id="cedula-10-textura"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-10.jpg?v=1718057985212">
-            <img id="cedula-20-textura"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-20.jpg?v=1718057985642">
-            <img id="cedula-50-textura"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-50.jpg?v=1718057986055">
-            <img id="cedula-100-textura"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/cedula-100.jpg?v=1718057986532">
+            <img id="cedula-1-textura" src="assets/ui/cedula-1.jpg">
+            <img id="cedula-2-textura" src="assets/ui/cedula-2.jpg">
+            <img id="cedula-5-textura" src="assets/ui/cedula-5.jpg">
+            <img id="cedula-10-textura" src="assets/ui/cedula-10.jpg">
+            <img id="cedula-20-textura" src="assets/ui/cedula-20.jpg">
+            <img id="cedula-50-textura" src="assets/ui/cedula-50.jpg">
+            <img id="cedula-100-textura" src="assets/ui/cedula-100.jpg">
 
             <audio id="click-sound" crossorigin="anonymous"
                 src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"></audio>
@@ -85,17 +62,17 @@
                     material="src: #betinho-triste; transparent: true;" id="betinho-troco"></a-plane>
                 <a-plane position="7 1.5 3.5" rotation="0 -90 0" width="3" height="1"
                     material="src: #textura-fundo; transparent: true;"></a-plane>
+                
                 <a-text value="Mandou mal!" position="7 1.55 4" rotation="0 -90 0" width="1.5" align="center"
-                    color="black" font="Sora-Medium-msdf.json"
-                    font-image="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/Sora-Medium.png?v=1718057965467"
+                    color="black" font="assets/ui/Sora-Medium-msdf.json" font-image="assets/ui/Sora-Medium.png"
                     negate="false" wrap-count="25" id="troco-betinho-texto"></a-text>
             </a-entity>
 
             <a-entity position="6.5 0.5 -0.6" rotation="0 -90 0" id="painel-troco">
                 <a-text value="TROCO: 0R$" position="7 1.55 3.9" rotation="0 -90 0" width="1.5" align="center"
-                    color="white" font="Sora-Medium-msdf.json"
-                    font-image="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/Sora-Medium.png?v=1718057965467"
-                    negate="false" wrap-count="25" id="troco"></a-text>
+                    color="white" font="assets/ui/Sora-Medium-msdf.json" font-image="assets/ui/Sora-Medium.png" negate="false"
+                    wrap-count="25" id="troco"></a-text>
+                
                 <a-plane position="6.9 1.2 4.3" rotation="0 -90 0" width="0.85" height="0.3"
                     material="src: #textura-zerar; transparent: true;" class="interagivel" id="zerar"
                     event-set__mouseenter="_event: mouseenter; scale: 1.05 1.05 1.05"
@@ -150,10 +127,10 @@
                     material="src: #betinho-triste; transparent: true;" id="imagem-betinho"></a-plane>
                 <a-plane position="7 1.5 3.5" rotation="0 -90 0" width="3" height="1"
                     material="src: #textura-fundo; transparent: true;"></a-plane>
+                
                 <a-text value="" position="7 1.55 4" rotation="0 -90 0" width="1.5" align="center" color="black"
-                    font="Sora-Medium-msdf.json"
-                    font-image="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/Sora-Medium.png?v=1718057965467"
-                    negate="false" wrap-count="25" id="texto-betinho"></a-text>
+                    font="assets/ui/Sora-Medium-msdf.json" font-image="assets/ui/Sora-Medium.png" negate="false" wrap-count="25"
+                    id="texto-betinho"></a-text>
             </a-entity>
 
             <a-plane position="3 1.5 1.5" rotation="0 0 0" width="2.5" height="2.5"
@@ -176,25 +153,24 @@
                     event-set__mouseenter="_event: mouseenter; scale: 1.2 1.2 1.2"
                     event-set__mouseleave="_event: mouseleave; scale: 1 1 1" reset-animation
                     sound="on: click; src: #click-sound"></a-plane>
+                
                 <a-text
                     value="Olá, meu nome é joãozinho, e eu queria comprar dois carrinhos de brinquedo pelo preço de 200 reais. Você aceita?"
                     position="7 1.7 3.5" rotation="0 -90 0" width="2.5" align="center" color="black"
-                    font="Sora-Medium-msdf.json"
-                    font-image="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/Sora-Medium.png?v=1718057965467g"
-                    negate="false" id="texto-interacao"></a-text>
+                    font="assets/ui/Sora-Medium-msdf.json" font-image="assets/ui/Sora-Medium.png" negate="false"
+                    id="texto-interacao"></a-text>
             </a-entity>
 
             <a-text value="SALDO DA LOJA: 0R$" position="-2 2.3 3.5" rotation="0 90 0" width="3.5" align="center"
-                color="white" font="Sora-Medium-msdf.json"
-                font-image="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/Sora-Medium.png?v=1718057965467"
-                negate="false" id="texto-saldo"></a-text>
+                color="white" font="assets/ui/Sora-Medium-msdf.json" font-image="assets/ui/Sora-Medium.png" negate="false"
+                id="texto-saldo"></a-text>
+            
             <a-plane position="-2 1.5 3.5" rotation="0 90 0" width="2.5" height="1"
                 material="src: #textura-reiniciar; transparent: true;"
                 event-set__mouseenter="_event: mouseenter; scale: 1.2 1.2 1.2"
                 event-set__mouseleave="_event: mouseleave; scale: 1 1 1" class="interagivel" id="reiniciar"></a-plane>
         </a-entity>
 
-        <!--         3 2.3 4 -->
         <a-entity camera look-controls wasd-controls position="0 1.7 0" rotation="180 0 0">
             <a-cursor fuse="true" raycaster="objects: .interagivel"
                 event-set__1="_event: mouseenter; color: springgreen"
@@ -206,9 +182,9 @@
         var mensagem = document.getElementById('interacao');
         var texto = document.getElementById('texto-interacao');
         var textures = [
-            'https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/pato.png?v=1718057945918',
-            'https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/pombo.png?v=1718057944566',
-            'https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/tubarao.png?v=1718057945333',
+            'assets/ui/pato.png',
+            'assets/ui/pombo.png',
+            'assets/ui/tubarao.png',
         ];
         var currentTextureIndex = 0;
         var mensagemBetinho = document.getElementById('mensagem-betinho');
