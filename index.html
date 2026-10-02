@@ -7,17 +7,83 @@
     <title>Sabidin Playground 🏪💸</title>
     <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-animation-component@3.2.1/dist/aframe-animation-component.min.js"></script>
-    <!-- <script src="https://npmcdn.com/aframe-animation-component@3.0.1"></script> -->
     <script src="https://npmcdn.com/aframe-event-set-component@3.0.1"></script>
     <script src="https://unpkg.com/aframe-layout-component@5.3.0/dist/aframe-layout-component.min.js"></script>
     <script src="https://npmcdn.com/aframe-template-component@3.1.1"></script>
     <link rel="icon" type="image/svg"
         href="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/icone.svg?v=1718057931501">
+
+    <style>
+        /* é definida a estilização da tela de loading minimalista */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .loading-title {
+            color: #0d47a1;
+            margin-bottom: 24px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .loader-track {
+            width: 250px;
+            height: 6px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-fill {
+            position: absolute;
+            height: 100%;
+            width: 50%;
+            background-color: #fbc02d;
+            border-radius: 10px;
+            animation: slide-loading 1.2s infinite ease-in-out alternate;
+        }
+
+        @keyframes slide-loading {
+            0% {
+                left: 0;
+                background-color: #fbc02d;
+            }
+            100% {
+                left: 50%;
+                background-color: #1976d2;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <!-- é inserida a estrutura html da tela de loading -->
+    <div id="loading-screen">
+        <div class="loading-title">Carregando playground...</div>
+        <div class="loader-track">
+            <div class="loader-fill"></div>
+        </div>
+    </div>
+
     <a-scene>
         <a-assets>
+            <!-- é feito o pré-carregamento do modelo 3d para evitar pop-in -->
+            <a-asset-item id="store-model-asset" src="assets/shopping_store.glb"></a-asset-item>
+
             <img id="textura-fundo" src="assets/ui/fundo-branco.png">
             <img id="textura-aceitar" src="assets/ui/botao-aceitar.png">
             <img id="textura-negar" src="assets/ui/botao-negar.png">
@@ -26,7 +92,6 @@
             <img id="textura-reiniciar" src="assets/ui/botao-reiniciar.png" alt="">
 
             <img id="mural-explicativo" src="assets/ui/mural-explicativo.png" alt="">
-
             <img id="fundo-cidade" src="assets/ui/cidade.jpg" alt="">
 
             <img id="betinho-feliz" src="assets/ui/betinho-feliz.png" alt="">
@@ -42,18 +107,20 @@
 
             <audio id="click-sound" crossorigin="anonymous"
                 src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"></audio>
-            <audio id="background-music"
-                src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/background-song.ogg?v=1718058001900"></audio>
+            <!-- é referenciada a nova música de fundo com preload -->
+            <audio id="background-music" src="assets/musica-fundo.mp3" preload="auto" crossorigin="anonymous"></audio>
             <audio id="correct-sound"
                 src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/certo.ogg?v=1718058002234"></audio>
             <audio id="incorrect-sound"
                 src="https://cdn.glitch.global/e8e70e03-1ca6-4218-9393-926b4ea3d4c0/errado.ogg?v=1718058002528"></audio>
         </a-assets>
 
-        <a-entity sound="src: #background-music; autoplay: true; loop: true; volume: 0.4"></a-entity>
+        <!-- é tocada a música de fundo em loop com volume baixo -->
+        <a-entity sound="src: #background-music; autoplay: true; loop: true; volume: 0.02"></a-entity>
 
         <a-entity id="playground" position="-3 -0.6 -4">
-            <a-entity position="0 0 -0.5" rotation="0 0 0" gltf-model="assets/shopping_store.glb"
+            <!-- é instanciado o modelo 3d usando o asset pré-carregado -->
+            <a-entity id="store-model-entity" position="0 0 -0.5" rotation="0 0 0" gltf-model="#store-model-asset"
                 scale="1.5 1.5 1.5"></a-entity>
 
             <a-entity position="6.2 1.5 -0.1" id="troco-mensagem" rotation="0 -90 0"
@@ -179,273 +246,298 @@
     </a-scene>
 
     <script>
-        var mensagem = document.getElementById('interacao');
-        var texto = document.getElementById('texto-interacao');
-        var textures = [
+        // são referenciados os elementos globais da interface
+        const interactionEntity = document.getElementById('interacao');
+        const interactionTextElement = document.getElementById('texto-interacao');
+        const feedbackEntity = document.getElementById('mensagem-betinho');
+        const feedbackTextElement = document.getElementById('texto-betinho');
+        const feedbackImageElement = document.getElementById('imagem-betinho');
+        const changePanelElement = document.getElementById('painel-troco');
+        const changeFeedbackEntity = document.getElementById('troco-mensagem');
+        const changeFeedbackTextElement = document.getElementById('troco-betinho-texto');
+        const restartButton = document.querySelector('#reiniciar');
+        const balanceTextElement = document.getElementById('texto-saldo');
+        const changeTextElement = document.getElementById('troco');
+        
+        let customerEntity;
+        let acceptButton;
+        let denyButton;
+        let deliverButton;
+
+        const customerTextures = [
             'assets/ui/pato.png',
             'assets/ui/pombo.png',
             'assets/ui/tubarao.png',
         ];
-        var currentTextureIndex = 0;
-        var mensagemBetinho = document.getElementById('mensagem-betinho');
-        var textoBetinho = document.getElementById('texto-betinho');
-        var imagemBetinho = document.getElementById('imagem-betinho');
-        var painelTroco = document.getElementById('painel-troco');
-        var mensagemBetinhoTroco = document.getElementById('troco-mensagem');
-        var textoBetinhoTroco = document.getElementById('troco-betinho-texto');
+        let currentTextureIndex = 0;
+        let currentBalance = 0;
+        let insertedChange = 0;
+        let orderValue;
+        let paidValue = 0;
 
-        var reiniciar = document.querySelector('#reiniciar');
-        var textoSaldo = document.getElementById('texto-saldo');
-        var saldoAtual = 0;
-
-        reiniciar.addEventListener('click', function () {
-            // location.reload();
-            saldoAtual = 0;
-            textoSaldo.setAttribute('value', 'SALDO DA LOJA: ' + saldoAtual + 'R$');
-        });
-
-
-        var trocoInserido = 0;
-        var troco = document.getElementById('troco');
-        var valorPedido; // Define valorPedido as a global variable
-
-        var valorPago = 0;
-
-        var nomes = ["Alex", "Cris", "Dani", "Julio", "Léo", "Nico", "Tay", "Bia", "Tuca", "Sami", "Rafa", "Cau", "Gui", "Tati", "Fran"];
-        var quantidades = [1, 2, 3, 4];
-        var produtos = ["carrinho(s) de brinquedo", "urso(s) de pelucia", "caixa(s) de blocos de construção"];
-        var precosVenda = {
+        const customerNames = ["Alex", "Cris", "Dani", "Julio", "Léo", "Nico", "Tay", "Bia", "Tuca", "Sami", "Rafa", "Cau", "Gui", "Tati", "Fran"];
+        const purchaseQuantities = [1, 2, 3, 4];
+        const productNames = ["carrinho(s) de brinquedo", "urso(s) de pelucia", "caixa(s) de blocos de construção"];
+        
+        const salePrices = {
             "carrinho(s) de brinquedo": 20,
             "urso(s) de pelucia": 35,
             "caixa(s) de blocos de construção": 110
         };
-        var precosCompra = {
+        const purchasePrices = {
             "carrinho(s) de brinquedo": 15,
             "urso(s) de pelucia": 30,
             "caixa(s) de blocos de construção": 100
         };
 
+        // é obtido um elemento aleatório de uma lista
         function getRandomElement(array) {
             return array[Math.floor(Math.random() * array.length)];
         }
 
-        function toggleInteragivel(classe, adicionar) {
-            var elementos = document.querySelectorAll(classe);
-            elementos.forEach(function (elemento) {
-                if (adicionar) {
-                    elemento.classList.add('interagivel');
+        // é alterada a classe interativa dos painéis e botões
+        function toggleInteractableElements(selector, shouldAdd) {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(function (element) {
+                if (shouldAdd) {
+                    element.classList.add('interagivel');
                 } else {
-                    elemento.classList.remove('interagivel');
+                    element.classList.remove('interagivel');
                 }
             });
         }
 
-        function gerarFrase() {
-            let nome = getRandomElement(nomes);
-            let quantidade = getRandomElement(quantidades);
-            let produto = getRandomElement(produtos);
-            let precoVendido = precosVenda[produto];
-            valorPedido = (quantidade * precoVendido) + (Math.floor(Math.random() * 31) - 25);
-            texto.setAttribute('data-quantidade', quantidade);
-            texto.setAttribute('data-produto', produto);
-            texto.setAttribute('data-valor-pedido', valorPedido);
-            return `Olá, meu nome é ${nome} gostaria de comprar ${quantidade} ${produto} pelo preço de ${valorPedido} reais. Tudo bem?`;
+        // é gerada uma nova frase de pedido para o cliente atual
+        function generateCustomerPhrase() {
+            const name = getRandomElement(customerNames);
+            const quantity = getRandomElement(purchaseQuantities);
+            const product = getRandomElement(productNames);
+            const unitSalePrice = salePrices[product];
+            const unitPurchasePrice = purchasePrices[product];
+            const totalCost = quantity * unitPurchasePrice;
+            
+            // é calculado o valor inicial do pedido com variação aleatória
+            orderValue = (quantity * unitSalePrice) + (Math.floor(Math.random() * 31) - 25);
+            
+            // é aplicado um ajuste para evitar que o valor do pedido seja idêntico ao custo total
+            if (orderValue === totalCost) {
+                const randomAdjustment = (Math.random() > 0.5) ? 5 : -5;
+                orderValue += randomAdjustment;
+            }
+            
+            // é ajustado o valor caso a variação torne o pedido negativo ou gratuito
+            if (orderValue <= 0) {
+                orderValue = totalCost + 5;
+            }
+            
+            interactionTextElement.setAttribute('data-quantidade', quantity);
+            interactionTextElement.setAttribute('data-produto', product);
+            interactionTextElement.setAttribute('data-valor-pedido', orderValue);
+            
+            return `Olá, meu nome é ${name} gostaria de comprar ${quantity} ${product} pelo preço de ${orderValue} reais. Tudo bem?`;
         }
 
-        function verificarDecisao(aceitou) {
-            let quantidade = parseInt(texto.getAttribute('data-quantidade'));
-            let produto = texto.getAttribute('data-produto');
-            let valorPedido = parseInt(texto.getAttribute('data-valor-pedido'));
-            let precoCompra = precosCompra[produto];
-            let valorCompra = quantidade * precoCompra;
-            let lucro = valorPedido - valorCompra;
+        // é validada a decisão do jogador e exibido o feedback
+        function verifySaleDecision(isAccepted) {
+            const quantity = parseInt(interactionTextElement.getAttribute('data-quantidade'));
+            const product = interactionTextElement.getAttribute('data-produto');
+            const requestedValue = parseInt(interactionTextElement.getAttribute('data-valor-pedido'));
+            const unitPurchasePrice = purchasePrices[product];
+            const totalCost = quantity * unitPurchasePrice;
+            const profit = requestedValue - totalCost;
 
-            mensagemBetinho.setAttribute('visible', true);
+            feedbackEntity.setAttribute('visible', true);
 
-            if (valorCompra < valorPedido) {
-                if (aceitou) {
-                    textoBetinho.setAttribute('value', 'Boa decisão! você teve lucro de ' + lucro + ' reais.');
-                    imagemBetinho.setAttribute('src', '#betinho-feliz');
+            // é avaliado se o valor de venda resulta em lucro ou prejuízo
+            if (totalCost < requestedValue) {
+                if (isAccepted) {
+                    feedbackTextElement.setAttribute('value', 'Boa decisão! você teve lucro de ' + profit + ' reais.');
+                    feedbackImageElement.setAttribute('src', '#betinho-feliz');
                     document.querySelector('#correct-sound').play();
                 } else {
-                    textoBetinho.setAttribute('value', 'Má decisão. você teria lucro de ' + lucro + ' reais.');
-                    imagemBetinho.setAttribute('src', '#betinho-triste');
+                    feedbackTextElement.setAttribute('value', 'Má decisão. você teria lucro de ' + profit + ' reais.');
+                    feedbackImageElement.setAttribute('src', '#betinho-triste');
                     document.querySelector('#incorrect-sound').play();
                 }
             } else {
-                if (aceitou) {
-                    textoBetinho.setAttribute('value', 'Má decisão. você teve prejuizo de ' + -lucro + ' reais.');
-                    imagemBetinho.setAttribute('src', '#betinho-triste');
+                if (isAccepted) {
+                    feedbackTextElement.setAttribute('value', 'Má decisão. você teve prejuizo de ' + -profit + ' reais.');
+                    feedbackImageElement.setAttribute('src', '#betinho-triste');
                     document.querySelector('#incorrect-sound').play();
                 } else {
-                    textoBetinho.setAttribute('value', 'Boa decisão! você teria prejuizo de ' + -lucro + ' reais.');
-                    imagemBetinho.setAttribute('src', '#betinho-feliz');
+                    feedbackTextElement.setAttribute('value', 'Boa decisão! você teria prejuizo de ' + -profit + ' reais.');
+                    feedbackImageElement.setAttribute('src', '#betinho-feliz');
                     document.querySelector('#correct-sound').play();
                 }
             }
 
+            // é programada a ocultação do feedback após 4 segundos
             setTimeout(function () {
-                mensagemBetinho.setAttribute('visible', false);
+                feedbackEntity.setAttribute('visible', false);
             }, 4000);
         }
 
-
-
-        function atualizarTroco(valor) {
-            trocoInserido += valor;
-            troco.setAttribute('value', 'TROCO: ' + trocoInserido + 'R$');
+        // é incrementado o valor do troco conforme a cédula selecionada
+        function updateInsertedChange(valueToAdd) {
+            insertedChange += valueToAdd;
+            changeTextElement.setAttribute('value', 'TROCO: ' + insertedChange + 'R$');
         }
 
-        function mandarClienteEmbora() {
-            const cliente = document.querySelector('#cliente');
-            // recoloca o plano um pouquinho FORA da zona antes de dar play
-            cliente.object3D.position.z = 2.85;
-            const anim = cliente.components.animation;
-            if (anim) anim.play();
+        // é acionada a animação de saída do cliente do estabelecimento
+        function dismissCustomer() {
+            customerEntity.object3D.position.z = 2.85;
+            const animationComponent = customerEntity.components.animation;
+            if (animationComponent) animationComponent.play();
         }
 
-
-        function zerarTroco() {
-            trocoInserido = 0;
-            troco.setAttribute('value', 'TROCO: ' + trocoInserido + 'R$');
+        // é reiniciado o contador do troco atual
+        function resetChangeCounter() {
+            insertedChange = 0;
+            changeTextElement.setAttribute('value', 'TROCO: ' + insertedChange + 'R$');
         }
 
+        // é registrado o componente que monitora a chegada de novos clientes
         AFRAME.registerComponent('check-position', {
             init: function () {
-                this.alreadyStopped = false;          // controle interno
+                this.isAlreadyStopped = false; 
             },
 
             tick: function () {
-                let position = this.el.object3D.position;
+                const currentPosition = this.el.object3D.position;
+                const zCoordinate = currentPosition.z;
 
-                const z = this.el.object3D.position.z;
-
-                /* —­­­­ 1) Chegou à frente da loja —­­­­ */
-                if (!this.alreadyStopped && z <= 3 && z >= 2.9) {
-                    const anim = this.el.components.animation;
-                    if (anim) anim.pause();
-                    this.alreadyStopped = true;         // trava novas pausas
-                    mensagem.setAttribute('visible', true);
+                // é pausada a caminhada do cliente ao chegar na loja
+                if (!this.isAlreadyStopped && zCoordinate <= 3 && zCoordinate >= 2.9) {
+                    const animationComponent = this.el.components.animation;
+                    if (animationComponent) animationComponent.pause();
+                    this.isAlreadyStopped = true; 
+                    interactionEntity.setAttribute('visible', true);
                 }
 
-                /* —­­­­ 2) Já saiu da zona (cliente indo embora ou novo cliente chegando) —­­­­ */
-                if (this.alreadyStopped && (z > 3 || z < 2.8)) {
-                    this.alreadyStopped = false;        // libera nova pausa na próxima passagem
-                    mensagem.setAttribute('visible', false);
+                // é liberado o ciclo de chegada após o cliente sair da área de interação
+                if (this.isAlreadyStopped && (zCoordinate > 3 || zCoordinate < 2.8)) {
+                    this.isAlreadyStopped = false; 
+                    interactionEntity.setAttribute('visible', false);
                 }
 
-                if (position.z === -12) {
-                    currentTextureIndex = (currentTextureIndex + 1) % textures.length;
-                    cliente.setAttribute('material', 'src', textures[currentTextureIndex]);
+                // é trocada a textura e gerada uma nova frase para o próximo cliente
+                if (currentPosition.z === -12) {
+                    currentTextureIndex = (currentTextureIndex + 1) % customerTextures.length;
+                    customerEntity.setAttribute('material', 'src', customerTextures[currentTextureIndex]);
 
-                    //nova interacao (Aqui deve mudar o texto do a-text)
-                    aceitar.setAttribute('visible', true);
-                    negar.setAttribute('visible', true);
-                    let frase = gerarFrase();
-                    texto.setAttribute('value', frase);
+                    acceptButton.setAttribute('visible', true);
+                    denyButton.setAttribute('visible', true);
+                    
+                    const newPhrase = generateCustomerPhrase();
+                    interactionTextElement.setAttribute('value', newPhrase);
                 }
             }
         });
 
+        // é registrado um componente vazio para lidar com cliques extras
         AFRAME.registerComponent('reset-animation', {
             init: function () {
-                var self = this;
                 this.el.addEventListener('click', function () {
-
                 });
             }
         });
 
+        // são aplicadas as rotinas de inicialização e eventos
         document.addEventListener('DOMContentLoaded', function () {
-            let frase = gerarFrase();
-            texto.setAttribute('value', frase);
-
-            var cliente = document.querySelector('#cliente');
-            cliente.setAttribute('check-position', '');
-
-            mensagem.setAttribute("visible", false);
-            var aceitar = document.querySelector('#aceitar');
-            var negar = document.querySelector('#negar');
-            var entregar = document.querySelector('#entregar');
-            // entregar.setAttribute('reset-animation', '');
-            mensagemBetinhoTroco.setAttribute('visible', false);
-
-            cliente.setAttribute('material', 'src', textures[0]);
-
-            toggleInteragivel('#cedula-1, #cedula-2, #cedula-5, #cedula-10, #cedula-20, #cedula-50, #cedula-100, #entregar, #zerar', false);
-
-            aceitar.addEventListener('click', function () {
-                verificarDecisao(true);
-
-                valorPago = valorPedido + Math.floor(Math.random() * 30) + 1;
-                texto.setAttribute('value', `Comprei por ${valorPedido}R$, mas vou lhe pagar com ${valorPago}R$. Qual será meu troco?`);
-                aceitar.setAttribute('visible', false);
-                negar.setAttribute('visible', false);
-
-                toggleInteragivel('#cedula-1, #cedula-2, #cedula-5, #cedula-10, #cedula-20, #cedula-50, #cedula-100, #entregar, #zerar', true);
+            
+            // é aguardada a renderização completa do modelo 3d da loja para remover a tela de loading
+            const storeModelEntity = document.querySelector('#store-model-entity');
+            
+            storeModelEntity.addEventListener('model-loaded', function () {
+                const loadingScreenElement = document.getElementById('loading-screen');
+                loadingScreenElement.style.opacity = '0';
+                
+                setTimeout(function () {
+                    loadingScreenElement.style.display = 'none';
+                }, 500);
             });
 
-            negar.addEventListener('click', function () {
-                verificarDecisao(false);
+            customerEntity = document.querySelector('#cliente');
+            acceptButton = document.querySelector('#aceitar');
+            denyButton = document.querySelector('#negar');
+            deliverButton = document.querySelector('#entregar');
 
-                var cliente = document.querySelector('#cliente');
-                cliente.setAttribute('position', { x: cliente.getAttribute('position').x, y: cliente.getAttribute('position').y, z: 12 });
-                mensagem.setAttribute("visible", false);
-                mandarClienteEmbora();
+            const initialPhrase = generateCustomerPhrase();
+            interactionTextElement.setAttribute('value', initialPhrase);
+
+            customerEntity.setAttribute('check-position', '');
+            interactionEntity.setAttribute("visible", false);
+            changeFeedbackEntity.setAttribute('visible', false);
+            customerEntity.setAttribute('material', 'src', customerTextures[0]);
+
+            toggleInteractableElements('#cedula-1, #cedula-2, #cedula-5, #cedula-10, #cedula-20, #cedula-50, #cedula-100, #entregar, #zerar', false);
+
+            // é zerado o saldo ao reiniciar o sistema
+            restartButton.addEventListener('click', function () {
+                currentBalance = 0;
+                balanceTextElement.setAttribute('value', 'SALDO DA LOJA: ' + currentBalance + 'R$');
             });
 
-            document.querySelector('#cedula-1').addEventListener('click', function () {
-                atualizarTroco(1);
+            // é tratada a aceitação da oferta
+            acceptButton.addEventListener('click', function () {
+                verifySaleDecision(true);
+
+                paidValue = orderValue + Math.floor(Math.random() * 30) + 1;
+                interactionTextElement.setAttribute('value', `Comprei por ${orderValue}R$, mas vou lhe pagar com ${paidValue}R$. Qual será meu troco?`);
+                acceptButton.setAttribute('visible', false);
+                denyButton.setAttribute('visible', false);
+
+                toggleInteractableElements('#cedula-1, #cedula-2, #cedula-5, #cedula-10, #cedula-20, #cedula-50, #cedula-100, #entregar, #zerar', true);
             });
-            document.querySelector('#cedula-2').addEventListener('click', function () {
-                atualizarTroco(2);
+
+            // é tratada a recusa da oferta
+            denyButton.addEventListener('click', function () {
+                verifySaleDecision(false);
+
+                customerEntity.setAttribute('position', { x: customerEntity.getAttribute('position').x, y: customerEntity.getAttribute('position').y, z: 12 });
+                interactionEntity.setAttribute("visible", false);
+                dismissCustomer();
             });
-            document.querySelector('#cedula-5').addEventListener('click', function () {
-                atualizarTroco(5);
-            });
-            document.querySelector('#cedula-10').addEventListener('click', function () {
-                atualizarTroco(10);
-            });
-            document.querySelector('#cedula-20').addEventListener('click', function () {
-                atualizarTroco(20);
-            });
-            document.querySelector('#cedula-50').addEventListener('click', function () {
-                atualizarTroco(50);
-            });
-            document.querySelector('#cedula-100').addEventListener('click', function () {
-                atualizarTroco(100);
-            });
-            document.querySelector('#zerar').addEventListener('click', function () {
-                zerarTroco();
-            });
-            entregar.addEventListener('click', function () {
-                if (trocoInserido == (valorPago - valorPedido)) {
+
+            // são registrados os botões referentes às cédulas de dinheiro
+            document.querySelector('#cedula-1').addEventListener('click', function () { updateInsertedChange(1); });
+            document.querySelector('#cedula-2').addEventListener('click', function () { updateInsertedChange(2); });
+            document.querySelector('#cedula-5').addEventListener('click', function () { updateInsertedChange(5); });
+            document.querySelector('#cedula-10').addEventListener('click', function () { updateInsertedChange(10); });
+            document.querySelector('#cedula-20').addEventListener('click', function () { updateInsertedChange(20); });
+            document.querySelector('#cedula-50').addEventListener('click', function () { updateInsertedChange(50); });
+            document.querySelector('#cedula-100').addEventListener('click', function () { updateInsertedChange(100); });
+            
+            document.querySelector('#zerar').addEventListener('click', function () { resetChangeCounter(); });
+            
+            // é tratado o evento de devolução do troco ao cliente
+            deliverButton.addEventListener('click', function () {
+                if (insertedChange === (paidValue - orderValue)) {
                     document.getElementById('betinho-troco').setAttribute('src', '#betinho-feliz');
-                    textoBetinhoTroco.setAttribute('value', 'Que bom! Você acertou o troco desse ultimo cliente!');
+                    changeFeedbackTextElement.setAttribute('value', 'Que bom! Você acertou o troco desse ultimo cliente!');
                     document.querySelector('#correct-sound').play();
                 } else {
                     document.getElementById('betinho-troco').setAttribute('src', '#betinho-triste');
-                    textoBetinhoTroco.setAttribute('value', 'Que pena! Voce errou o troco desse ultimo cliente!');
+                    changeFeedbackTextElement.setAttribute('value', 'Que pena! Voce errou o troco desse ultimo cliente!');
                     document.querySelector('#incorrect-sound').play();
                 }
-                mensagemBetinhoTroco.setAttribute('visible', true);
+                changeFeedbackEntity.setAttribute('visible', true);
 
-                var cliente = document.querySelector('#cliente');
-                cliente.setAttribute('position', { x: cliente.getAttribute('position').x, y: cliente.getAttribute('position').y, z: 12 });
-                mensagem.setAttribute("visible", false);
-                mandarClienteEmbora();
+                customerEntity.setAttribute('position', { x: customerEntity.getAttribute('position').x, y: customerEntity.getAttribute('position').y, z: 12 });
+                interactionEntity.setAttribute("visible", false);
+                dismissCustomer();
 
-                saldoAtual += valorPago;
-                textoSaldo.setAttribute('value', 'SALDO DA LOJA: ' + saldoAtual + 'R$');
+                currentBalance += paidValue;
+                balanceTextElement.setAttribute('value', 'SALDO DA LOJA: ' + currentBalance + 'R$');
 
+                // é restaurado o aviso padrão do troco após um tempo
                 setInterval(function () {
-                    textoBetinhoTroco.setAttribute('value', 'Preste bastante atenção ao calcular o troco do seu cliente!');
-                    // mensagemBetinhoTroco.setAttribute('visible', false);
+                    changeFeedbackTextElement.setAttribute('value', 'Preste bastante atenção ao calcular o troco do seu cliente!');
                 }, 6000);
 
-                toggleInteragivel('#cedula-1, #cedula-2, #cedula-5, #cedula-10, #cedula-20, #cedula-50, #cedula-100, #entregar, #zerar', false);
+                toggleInteractableElements('#cedula-1, #cedula-2, #cedula-5, #cedula-10, #cedula-20, #cedula-50, #cedula-100, #entregar, #zerar', false);
 
-                zerarTroco();
+                resetChangeCounter();
             });
         });
     </script>
